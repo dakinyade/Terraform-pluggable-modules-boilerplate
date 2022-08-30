@@ -1,10 +1,5 @@
-variable "cidr_block" {
-  type = list(string)
-  description = "cidr range"
-}
-
-
-variable "subnets_block" {
+variable "ec2_values" {
   type = list(any)
-  description = "cidr range"
+  description = "ec2 Values"
 }
+

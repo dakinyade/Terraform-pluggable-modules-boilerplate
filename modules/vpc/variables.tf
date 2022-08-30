@@ -6,5 +6,10 @@ variable "cidr_block" {
 
 variable "subnets_block" {
   type = list(any)
-  description = "cidr range"
+  description = "Subnet block"
+}
+
+variable "network_Interfaces" {
+  type = list(any)
+  description = "Network Interfaces"
 }

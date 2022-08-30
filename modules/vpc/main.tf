@@ -4,7 +4,7 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "4.22.0"
+      version = ">=4.28.0"
     }
   }
 }
@@ -14,7 +14,7 @@ resource "aws_vpc" "main" {
   cidr_block       = "${var.cidr_block[count.index]}"
   instance_tenancy = "default"
   tags = {
-    Name = "main_${var.cidr_block[count.index]}"
+    Name = "main_${var.cidr_block[count.index]}" 
   }
 }
 
@@ -28,11 +28,18 @@ resource "aws_subnet" "subnets" {
   tags = {
     Name = "${var.subnets_block[count.index].name}_subnet"
   }
+
+  
 }
 
+############ NETWORK INTERFACE #####################
+# resource "aws_network_interface" "networkInterfaces" {
+#   count = length(var.network_Interfaces) > 0 ? length(var.network_Interfaces) : 0 
+#   subnet_id   = var.network_Interfaces[count.index].subnet_id
+#   private_ips = length(var.network_Interfaces[count.index].private_ips) > 0 ? var.network_Interfaces[count.index].private_ips : []
+#   tags = var.network_Interfaces[count.index].tags
 
-
-
+# }
 
 
 

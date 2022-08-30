@@ -32,5 +32,30 @@ subnets_block=[
         public = true
     }
 ]
-################################################
+################## NETWORK INTERFACES SECTION ################## 
+network_Interfaces=[
+    {
+     subnet_id = "subnet-05f64efa3bdeaa750",
+     private_ips = [],
+     tags = {
+        name = "test-server-eni-private-subnet",
+        subnet = "private-subnet"
+     } 
+    }
+]
 
+
+
+
+################## EC2 SECTION ################## 
+ec2_values =[
+    {
+      ami = "ami-085284d24fe829cd0"
+      instance_type = "t2.micro"
+      subnet_id = "subnet-05f64efa3bdeaa750",
+      private_ip = "",
+      tags = {
+        Name = "Test Server"
+      }
+    }
+]
