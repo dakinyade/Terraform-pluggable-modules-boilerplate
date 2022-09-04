@@ -1,4 +1,14 @@
-################## VPC SECTION ################## 
+################## VPC SECTION ##################
+vpcs = [
+  {
+      cidr_block        = "10.10.0.0/20",
+      instance_tenancy  =  "default" ,
+     tags = {
+        Name = "main_10.10.0.0/20" 
+      }
+  }
+]
+
 cidr_block = ["10.10.0.0/20"]
 availability_zone = ["us-west-1a", "us-west-1b"]
 subnets_block=[
@@ -32,10 +42,45 @@ subnets_block=[
         public = true
     }
 ]
+################## INTERNET GATEWAY ################## 
+gateways = [
+ {
+  vpc_index = 0,
+  tags      = {
+    Name = "main_10.0.0.20_internet_gtw"
+  } 
+ }
+
+]
+
+################## ROUTE TABLES ################## 
+route_tables = [
+  {
+    vpc_index = 0,
+    tags = {
+      Name = "main_10.0.0.20_route_table"
+    }
+  }
+]
+
+
+################## ROUTE TABLES ROUTES ################## 
+route_tables_routes = [
+  {
+    destination_cidr_block = "0.0.0.0/0",
+    gatewayIndex = 0, //OPTIONAL - used to select the internet gateway to use, 0 for the first decleared IGW
+    route_table_index = 0,
+    //egress_only_gateway_index = 0
+    tags = {
+      Name = "main_10.0.0.20_route_table_IGW_route"
+    }
+  }
+]
+
 ################## NETWORK INTERFACES SECTION ################## 
 network_Interfaces=[
     {
-     subnet_id = "subnet-05f64efa3bdeaa750",
+     subnet_id = "subnet-03e47c72af5352c18",
      private_ips = [],
      tags = {
         name = "test-server-eni-private-subnet",
@@ -45,17 +90,75 @@ network_Interfaces=[
 ]
 
 
-
-
 ################## EC2 SECTION ################## 
 ec2_values =[
     {
       ami = "ami-085284d24fe829cd0"
       instance_type = "t2.micro"
-      subnet_id = "subnet-05f64efa3bdeaa750",
+      subnet_id = "subnet-0c370088dcfc90936",
+      subnet_index = 3
+      vpc_security_group_ids = ["sg-05aafdd79b392304a"]
       private_ip = "",
+      key_name = "DNA-Deployer"
       tags = {
         Name = "Test Server"
       }
     }
+]
+
+################## SECURITY SECTION ################## 
+sg_information =[
+    {
+      name = "EC2-SSG-Open-All",
+      description = "Grant EC2s all port permissions, testing ",
+      vpc_id = "vpc-0c3e3780893baa921",
+      ingress = {
+      description = "Ingress connection defination" ,
+      from_port   =  "0",
+      protocol    =  "-1",
+      to_port     =  "0",
+      cidr_blocks =  ["0.0.0.0/0"],
+      ipv6_cidr_blocks = ["::/0"]
+      },
+      egress = {
+      description = "Egress connection defination" ,
+      from_port   =  "0",
+      protocol    =  "-1",
+      to_port     =  "0",
+      cidr_blocks =  ["0.0.0.0/0"],
+      ipv6_cidr_blocks = ["::/0"]
+      },
+      tags = {
+        name = "Security-group-EC2-SSG-Open-All"
+      }
+    }
+]
+
+################## SECURITY KEYPAIRS ################## 
+key_pairs = [
+  {
+    key_name   = "DNA-Deployer",
+    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGohJ8iR8ZtBJiUO1lqQRKmxuazhnih9xpZv5/CyRYQIwDvajwucvT7ve5jeHgsCIcN7wSN/BhwyqvJaRv+0cZdoL3FJFmYCq/WsTtrTVWW2rrf1doNNqasQ+iw36DVmioc/D2ravewsrZ15llVTL0szuTF+uvI0H8kmgHJZecmQFg8hkCPZBGRg1VKtB3DBaAgqMGVJ1OlUH1PMz1ouQQeX5Gpu0Vh+9S5xmJnY4/u5C3UyxYeP512XZ5EfNT6ofDRz8v4NAqwvsnQnMl8AtA6UJK38z2jsl/CiAOCWyT7DIdeoPx9sUYyFWZgSprzeSZ1mUbPHDsrLQcvc41j1gH mac@DNA-MAC.local"
+    tags       = {
+      name = "DNA-Deployer"
+    }
+  },
+  {
+    key_name   = "test-deployer-key",
+    public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDUVavKqk0U1ADOSynVsGUAutSeQIkyrFqZIGNnQgYjey/Ii2jfNMie2EH5wOqU3tAWB8Xq9noHOKROy73ibLGFcGQ6WVQQweR7bUMfIv7PY5RphLX7yzz17bFgxXQxKlU9ZX/7SxiCR1936qlh6BFuNhNCVxXqObUSZGj+u2HsZKy2AV6l3LmqBiIEq6RJ9jnRNVQP79ZPmk5BboQvG+Y4XRvQCyZz5q+vp5KQxY9rsSiZ64D8w5fXQa4W/wRc6H/N76Pz+BbZYc8xrsVJMCwH0iwt4GtRtWzNVel1r0uhHMw2TAY3QOTYrYqZzjfakxyHfNqN2BFkshV7s9Oy2XhORKz3eLnhiWB2KEzHfB3blQVEICoR8F0l5/FYyESkfWzyfU/ImJRd/YCVADQQVRiSMn43Rse5VPOXlxKS2SYnK134sknM91EawLJJIFWYeIlBji9eEg3jV3emSQ0rJIxbJui9IfZy0B4Zpn+rroWLE7oQcTr51AGa+GKTTMxHOytWErm31mKt+/uWB5ixmT0YDOWXmDVsvhTdspzceI/1GF+o3qYvM52yUruIr6S5cWIgOBtnHsHrZoW2M9BBQyy2uzD5FioxYNCMXaQEw34J4GfnStANGoj1AbqM5crfxU83JyiJVXBAKU3duy0eC8/uW0dvhkQ5Xp/V8LI0erNJXw== michaelintellect2007@gmail.com"
+    tags       = {
+      name = "test-deployer-key"
+    }
+  }
+
+]
+
+################## IAM ROLES ################## 
+iam_roles = [
+  {
+    path = "/",
+    name = "GlueaccesstoS32"
+    assume_role_policy = "json/role_assumed_policy/glueAssumedRole.json"
+    max_sesssion_duration = 3600
+  }
 ]

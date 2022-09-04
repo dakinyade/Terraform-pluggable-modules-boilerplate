@@ -32,7 +32,10 @@ resource "aws_instance" "cloudInstances" {
   count = length(var.ec2_values) > 0 ? length(var.ec2_values) : 0 
   ami   = "${var.ec2_values[count.index].ami}"
   instance_type = "${var.ec2_values[count.index].instance_type}"
+  #subnet_id     = aws_subnet.subnets[var.ec2_values[count.index].subnet_index].id
   subnet_id = var.ec2_values[count.index].subnet_id
+  vpc_security_group_ids = var.ec2_values[count.index].vpc_security_group_ids
+  key_name = var.ec2_values[count.index].key_name
   tags = var.ec2_values[count.index].tags
 }
 

@@ -1,4 +1,24 @@
 ############ VPC ############## 
+variable "vpcs" {
+  type = list(any)
+  description = "list of VPCs"
+}
+
+variable "gateways" {
+  type = list(any)
+  description = "list of Internet gateways"
+}
+
+variable "route_tables" {
+  type = list(any)
+  description = "list of route tables "
+}
+
+variable "route_tables_routes" {
+  type = list(any)
+  description = "list of route tables routes"
+}
+
 variable "cidr_block" {
   type = list(string)
   description = "cidr range"
@@ -16,6 +36,12 @@ variable "network_Interfaces" {
 }
 ###############################
 
+########### IAM ROLES #################
+variable "iam_roles" {
+  type = list(any)
+  description = "IAM Roles Values"
+}
+############ END ################
 
 
 ########### EC2 #################
@@ -23,4 +49,16 @@ variable "ec2_values" {
   type = list(any)
   description = "ec2 Values"
 }
+############ END ################
+
+########### SECURITY #################
+variable "sg_information" {
+  type = list(any)
+  description = "security Values"
+}
+variable "key_pairs" {
+  type = list(any)
+  description = "All security key pair goes hear"
+}
+
 ############ END ################
