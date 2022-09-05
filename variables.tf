@@ -43,6 +43,20 @@ variable "iam_roles" {
 }
 ############ END ################
 
+########### IAM POLICIES #################
+variable "iam_policies" {
+  type = list(any)
+  description = "IAM Polices Values"
+}
+############ END ################
+
+########### ROLES POLICIES ATTACHMENT #################
+variable "iam_attachments" {
+  type = list(any)
+  description = "IAM Roles Polices Attachment Values"
+}
+############ END ################
+
 
 ########### EC2 #################
 variable "ec2_values" {
@@ -61,4 +75,26 @@ variable "key_pairs" {
   description = "All security key pair goes hear"
 }
 
+############ END ################
+
+
+########### ECS CLUSTERS ##########
+variable "ecs_clusters" {
+  type = list(any)
+  description = "ecs clusters Values"
+}
+############ END ################
+
+########### ECS TASKS ##########
+variable "ecs_tasks" {
+  type = list(any)
+  description = "ecs Tasks Values"
+}
+############ END ################
+
+########### ECS SERVICES ##########
+variable "ecs_services" {
+  type = list(any)
+  description = "ecs services Values"
+}
 ############ END ################

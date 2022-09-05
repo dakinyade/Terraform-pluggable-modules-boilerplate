@@ -53,7 +53,7 @@ resource "aws_route_table" "EC2RouteTable" {
 resource "aws_route" "EC2Route" {
     count = length(var.route_tables_routes) > 0 ? length(var.route_tables_routes) : 0 
     destination_cidr_block = var.route_tables_routes[count.index].destination_cidr_block
-    egress_only_gateway_id =  try(aws_egress_only_internet_gateway.EgressInternetGW[var.route_tables_routes[count.index].egress_only_gateway_index].id, true)
+    //egress_only_gateway_id =  try(aws_egress_only_internet_gateway.EgressInternetGW[var.route_tables_routes[count.index].egress_only_gateway_index].id, true)
     gateway_id = try(aws_internet_gateway.EC2InternetGateway[var.route_tables_routes[count.index].gatewayIndex].id, true)
     route_table_id =  aws_route_table.EC2RouteTable[var.route_tables_routes[count.index].route_table_index].id
 }

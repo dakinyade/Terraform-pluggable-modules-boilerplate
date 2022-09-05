@@ -49,5 +49,3 @@ resource "aws_instance" "cloudInstances" {
 
 
 
-
-

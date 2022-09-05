@@ -12,6 +12,8 @@ module "vpc_module" {
 module "iam_module" {
   source = "./modules/iam"
   iam_roles = var.iam_roles
+  iam_policies = var.iam_policies
+  iam_attachments = var.iam_attachments
 }
 
 
@@ -24,4 +26,11 @@ module "security_module" {
 module "ec2_module" {
   source = "./modules/ec2"
   ec2_values = var.ec2_values
+}
+
+module "ecs_module" {
+  source = "./modules/ecs"
+  ecs_clusters = var.ecs_clusters
+  ecs_tasks = var.ecs_tasks
+  ecs_services = var.ecs_services
 }

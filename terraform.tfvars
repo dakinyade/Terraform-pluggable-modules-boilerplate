@@ -72,7 +72,7 @@ route_tables_routes = [
     route_table_index = 0,
     //egress_only_gateway_index = 0
     tags = {
-      Name = "main_10.0.0.20_route_table_IGW_route"
+      Name = "public_10.0.0.20_route_table_IGW_route"
     }
   }
 ]
@@ -95,13 +95,25 @@ ec2_values =[
     {
       ami = "ami-085284d24fe829cd0"
       instance_type = "t2.micro"
-      subnet_id = "subnet-0c370088dcfc90936",
+      subnet_id = "subnet-094e656eeb093eee5",
       subnet_index = 3
-      vpc_security_group_ids = ["sg-05aafdd79b392304a"]
+      vpc_security_group_ids = ["sg-09ab5aae64e88647d", "sg-05bdb03ee54abd083"]
       private_ip = "",
       key_name = "DNA-Deployer"
       tags = {
         Name = "Test Server"
+      }
+    },
+    {
+      ami = "ami-085284d24fe829cd0"
+      instance_type = "t2.micro"
+      subnet_id = "subnet-0f06d354b07122c1a",
+      subnet_index = 3
+      vpc_security_group_ids = ["sg-09ab5aae64e88647d", "sg-05bdb03ee54abd083"]
+      private_ip = "",
+      key_name = "DNA-Deployer"
+      tags = {
+        Name = "Private test Server"
       }
     }
 ]
@@ -111,7 +123,7 @@ sg_information =[
     {
       name = "EC2-SSG-Open-All",
       description = "Grant EC2s all port permissions, testing ",
-      vpc_id = "vpc-0c3e3780893baa921",
+      vpc_id = "vpc-011730b9b6104c214",
       ingress = {
       description = "Ingress connection defination" ,
       from_port   =  "0",
@@ -130,6 +142,30 @@ sg_information =[
       },
       tags = {
         name = "Security-group-EC2-SSG-Open-All"
+      }
+    },
+    {
+      name = "ICMP-EC2-SSG",
+      description = "Grant ICMP to server permissions, testing ",
+      vpc_id = "vpc-011730b9b6104c214",
+      ingress = {
+      description = "Ingress connection defination" ,
+      from_port   =  "0",
+      protocol    =  "icmp",
+      to_port     =  "0",
+      cidr_blocks =  ["0.0.0.0/0"],
+      ipv6_cidr_blocks = ["::/0"]
+      },
+      egress = {
+      description = "Egress connection defination" ,
+      from_port   =  "0",
+      protocol    =  "icmp",
+      to_port     =  "0",
+      cidr_blocks =  ["0.0.0.0/0"],
+      ipv6_cidr_blocks = ["::/0"]
+      },
+      tags = {
+        name = "icmp-Security-group-EC2-SSG-Open-All"
       }
     }
 ]
@@ -157,8 +193,83 @@ key_pairs = [
 iam_roles = [
   {
     path = "/",
-    name = "GlueaccesstoS32"
-    assume_role_policy = "json/role_assumed_policy/glueAssumedRole.json"
+    name = "GlueaccesstoS32Role"
+    assume_role_policy_file = "json/role_assumed_policy/glueAssumedRole.json"
     max_sesssion_duration = 3600
+  }
+]
+
+
+################## IAM POLICES ################## 
+iam_policies = [
+  {
+    name = "GlueaccesstoS32Policy"
+    description = "Glue access policy"
+    path = "/"
+    policy_file = "json/iam_policies/gluePolicy.json"
+    max_sesssion_duration = 3600
+  }
+]
+
+################## ROLES POLICIES ATTACHMENT ################## 
+iam_attachments = [
+  {
+    role_name = "GlueaccesstoS32Role"
+    policy_name = "GlueaccesstoS32Policy"
+  }
+]
+
+################## ECS CLUSTER ################## 
+ecs_clusters = [
+  {
+    name = "cluster-one"
+    tags = {
+      name = "clusetr-one-cluster",
+      ecsZoneSchdule = "CST"
+    }
+  }
+
+]
+################## ECS TASKS ################## 
+ecs_tasks = [
+  {
+    family = "cluster-one-service"
+    network_mode = "awsvpc"
+    requires_compatibilities = ["FARGATE"]
+    cpu  = 1024
+    memory = 2048
+    container_definitions = <<DEFINITION
+[
+  {
+    "image": "nginx",
+    "cpu": 1024,
+    "memory": 2048,
+    "name": "hello-world-nginx",
+    "networkMode": "awsvpc",
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80
+      }
+    ]
+  }
+]
+DEFINITION
+    
+  }
+
+]
+
+################## ECS SERVICES ################## 
+ecs_services = [
+  {
+    name = "cluster-one-service"
+    cluster_index = 0
+    task_definition_index= 0
+    desired_count = 1
+    launch_type = "FARGATE"
+    network_security_groups = ["sg-09ab5aae64e88647d"]
+    network_subnet = ["subnet-0f06d354b07122c1a"]
+    
   }
 ]
