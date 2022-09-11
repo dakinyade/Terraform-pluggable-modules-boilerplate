@@ -98,3 +98,11 @@ variable "ecs_services" {
   description = "ecs services Values"
 }
 ############ END ################
+
+########### ECS SERVICES ##########
+variable "route_tables_association" {
+  type = list(any)
+  description = "list of route table association with subnets"
+}
+############ END ################
+

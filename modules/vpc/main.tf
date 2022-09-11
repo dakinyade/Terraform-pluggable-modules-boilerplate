@@ -58,7 +58,12 @@ resource "aws_route" "EC2Route" {
     route_table_id =  aws_route_table.EC2RouteTable[var.route_tables_routes[count.index].route_table_index].id
 }
 
-
+############ ROUTE TABLE SUBNET ASSOCIATION #####################
+resource "aws_route_table_association" "routeTableAssociation" {
+  count = length(var.route_tables_association) > 0 ? length(var.route_tables_association) : 0 
+  subnet_id  = var.route_tables_association[count.index].subnet_id
+  route_table_id = aws_route_table.EC2RouteTable[var.route_tables_association[count.index].route_table_index].id
+}
 
 ############ NETWORK INTERFACE #####################
 # resource "aws_network_interface" "networkInterfaces" {

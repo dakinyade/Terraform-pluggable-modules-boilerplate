@@ -58,7 +58,7 @@ route_tables = [
   {
     vpc_index = 0,
     tags = {
-      Name = "main_10.0.0.20_route_table"
+      Name = "public_main_route"
     }
   }
 ]
@@ -74,6 +74,19 @@ route_tables_routes = [
     tags = {
       Name = "public_10.0.0.20_route_table_IGW_route"
     }
+  }
+]
+
+
+################## ROUTE TABLES SUBNET ASSOCIATION ################## 
+route_tables_association = [
+  {
+    subnet_id         = "subnet-01595b64f6cafde95",
+    route_table_index  = 0
+  },
+   {
+    subnet_id         = "subnet-0efa94e01f2658f65",
+    route_table_index  = 0
   }
 ]
 
@@ -123,7 +136,7 @@ sg_information =[
     {
       name = "EC2-SSG-Open-All",
       description = "Grant EC2s all port permissions, testing ",
-      vpc_id = "vpc-011730b9b6104c214",
+      vpc_id = "vpc-06c4544b4cd26c816",
       ingress = {
       description = "Ingress connection defination" ,
       from_port   =  "0",
@@ -147,7 +160,7 @@ sg_information =[
     {
       name = "ICMP-EC2-SSG",
       description = "Grant ICMP to server permissions, testing ",
-      vpc_id = "vpc-011730b9b6104c214",
+      vpc_id = "vpc-06c4544b4cd26c816",
       ingress = {
       description = "Ingress connection defination" ,
       from_port   =  "0",

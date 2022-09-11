@@ -33,3 +33,9 @@ variable "route_tables_routes" {
   type = list(any)
   description = "list of route tables routes"
 }
+
+variable "route_tables_association" {
+  type = list(any)
+  description = "list of route table association with subnets"
+}
+

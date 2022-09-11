@@ -3,6 +3,7 @@ module "vpc_module" {
   vpcs = var.vpcs
   gateways = var.gateways
   route_tables = var.route_tables
+  route_tables_association = var.route_tables_association
   route_tables_routes = var.route_tables_routes
   cidr_block=var.cidr_block
   subnets_block=var.subnets_block
